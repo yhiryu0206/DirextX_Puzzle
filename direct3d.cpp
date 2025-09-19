@@ -7,7 +7,6 @@
 #include "debug_ostream.h"
 #pragma commen(lib."d3d.lib");
 
-
 bool Direct3D::Initialize(HWND wnd)
 {
     return false;
