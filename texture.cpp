@@ -8,14 +8,15 @@
 #include "DirectXTex.h"
 using namespace DirectX;
 
+/* 読み込めるテクスチャの最大数 */
 static constexpr int TEXTURE_MAX = 100;
 
 struct TextureData
 {
-	std::wstring fileName;	//2重読み込み防止
-	unsigned int width = 0;
-	unsigned int height = 0;
-	ID3D11ShaderResourceView* pTexture = nullptr;	//テクスチャ
+	std::wstring fileName;	// ファイル名（重複読み込み防止に使用）
+	unsigned int width = 0;	// テクスチャの横幅
+	unsigned int height = 0; // テクスチャの高さ
+	ID3D11ShaderResourceView* pTexture = nullptr; // DirectX用のテクスチャデータ
 };
 
 static TextureData g_Texture[TEXTURE_MAX];
@@ -94,7 +95,7 @@ void Texture::AllRelease()
 {
 	for (TextureData& t : g_Texture)
 	{
-		SAFE_RELEASE(t.pTexture);
+		SafeRelease(t.pTexture);
 	}
 }
 

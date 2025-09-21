@@ -35,8 +35,6 @@ void Sprite::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
 	m_pContext = pContext;
 	m_pShader = pShader;
 	m_pTexture = pTexture;
-	//m_ScreenWidth = pDirect3D.GetBackBufferWidth();
-	//m_ScreenHeight = pDirect3D.GetBackBufferHeight();
 
 	// 頂点バッファ生成
 	D3D11_BUFFER_DESC bd = {};
@@ -51,7 +49,7 @@ void Sprite::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
 void Sprite::Finalize()
 {
 	/* 頂点バッファ解放 */
-	SAFE_RELEASE(m_pVertexBuffer);
+	SafeRelease(m_pVertexBuffer);
 }
 
 void Sprite::BeginDraw()
@@ -85,10 +83,6 @@ void Sprite::Draw(int texId, float x, float y, float width, float height, Direct
 	D3D11_MAPPED_SUBRESOURCE msr;
 	m_pContext->Map(m_pVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
 	Vertex* v = (Vertex*)msr.pData;
-
-	/* 頂点情報設定 */
-	const float SCREEN_WIDTH = m_ScreenWidth;
-	const float SCREEN_HEIGHT = m_ScreenHeight;
 
 	float left = x;
 	float right = x + width;
@@ -137,8 +131,8 @@ void Sprite::Draw(int texId, float x, float y, float width, float height, float 
 	Vertex* v = (Vertex*)msr.pData;
 
 	/* テクスチャ情報取得 */
-	int tsw = (float)m_pTexture->GetWidth(texId);
-	int tsh = (float)m_pTexture->GetHeight(texId);
+	float tsw = static_cast<float>(m_pTexture->GetWidth(texId));
+	float tsh = static_cast<float>(m_pTexture->GetHeight(texId));
 
 	/* 頂点座標 */
 	float left = x;

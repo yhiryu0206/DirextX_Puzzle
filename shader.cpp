@@ -145,13 +145,13 @@ bool Shader::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 void Shader::Finalize()
 {
 	/* çÏê¨èáÇÃãtÇ≈âï˙ */
-	SAFE_RELEASE(m_pSamplerState);
-	SAFE_RELEASE(m_pPSConstantBuffer);
-	SAFE_RELEASE(m_pPixelShader);
-	SAFE_RELEASE(m_pVSConstantBuffer0);
-	SAFE_RELEASE(m_pVSConstantBuffer1);
-	SAFE_RELEASE(m_pInputLayout);
-	SAFE_RELEASE(m_pVertexShader);
+	SafeRelease(m_pSamplerState);
+	SafeRelease(m_pPSConstantBuffer);
+	SafeRelease(m_pPixelShader);
+	SafeRelease(m_pVSConstantBuffer0);
+	SafeRelease(m_pVSConstantBuffer1);
+	SafeRelease(m_pInputLayout);
+	SafeRelease(m_pVertexShader);
 }
 
 void Shader::SetProjectionMatrix(const DirectX::XMMATRIX& matrix)

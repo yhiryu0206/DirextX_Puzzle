@@ -9,9 +9,16 @@
 #include <d3d11.h>
 #include <windows.h>
 
-//セーフリリースマクロ
-#define SAFE_RELEASE(o) if (o) { (o)->Release(); o = nullptr; }
-
+/* Releaseのtemplate */
+template<class T>
+inline void SafeRelease(T*& p)
+{
+	if (p)
+	{
+		p->Release();
+		p = nullptr;
+	}
+}
 enum AlphaBlendMode
 {
 	BLEND_TRANSPARENT,

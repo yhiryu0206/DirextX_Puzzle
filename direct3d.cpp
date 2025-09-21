@@ -112,17 +112,17 @@ bool Direct3D::Initialize(HWND hWnd)
 void Direct3D::Finalize()
 {
 	/* ブレンドステートのリリース */
-	SAFE_RELEASE(m_DepthStencilStateDepthDisable);
-	SAFE_RELEASE(m_BlendStateMultiply);
-	SAFE_RELEASE(m_BlendStateAdd);
+	SafeRelease(m_DepthStencilStateDepthDisable);
+	SafeRelease(m_BlendStateMultiply);
+	SafeRelease(m_BlendStateAdd);
 
 	/* バックバッファのリリース */
 	ReleaseBackBuffer();
 
 	/* 基盤のリリース */
-	SAFE_RELEASE(m_pSwapChain);
-	SAFE_RELEASE(m_pDeviceContext);
-	SAFE_RELEASE(m_pDevice);
+	SafeRelease(m_pSwapChain);
+	SafeRelease(m_pDeviceContext);
+	SafeRelease(m_pDevice);
 }
 
 void Direct3D::Clear()
@@ -262,7 +262,7 @@ bool Direct3D::ConfigureBackBuffer()
 void Direct3D::ReleaseBackBuffer()
 {
 	/* バックバッファのリリース */
-	SAFE_RELEASE(m_pRenderTargetView);
-	SAFE_RELEASE(m_pDepthStencilView);
-	SAFE_RELEASE(m_pDepthStencilBuffer);
+	SafeRelease(m_pRenderTargetView);
+	SafeRelease(m_pDepthStencilView);
+	SafeRelease(m_pDepthStencilBuffer);
 }
