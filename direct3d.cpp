@@ -93,7 +93,7 @@ bool Direct3D::Initialize(HWND hWnd)
 
 	m_pDevice->CreateBlendState(&bd, &m_BlendStateAdd);	//作成
 
-	//Direct3D_SetAlphaBlend(BLEND_TRANSPARENT);
+	SetAlphaBlend(BLEND_TRANSPARENT);
 
 	//深度ステンシルステート設定（奥行きの設定をしない/重なる）
 	D3D11_DEPTH_STENCIL_DESC dsd = {};

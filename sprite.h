@@ -48,7 +48,7 @@ public:
 		float tx, float ty, float tw, float th,
 		DirectX::XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f});
 
-	Sprite* GetSprite();
+	static Sprite* GetSprite();
 
 };
 #endif // !SPRITE_H

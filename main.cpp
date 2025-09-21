@@ -11,6 +11,13 @@
 #include "shader.h"
 #include "texture.h"
 #include "sprite.h"
+#include "system_timer.h"
+#include "keylogger.h"
+#include "mouse.h"
+#include "debug_text.h"
+#include <sstream>
+
+#include "scene.h"
 
 /*------------------------------
 *	ウィンドウ情報
@@ -32,7 +39,9 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	Direct3D g_Direct3D;
 	Shader* g_Shader = Shader::GetShader();
 	Texture* g_Texture = Texture::GetTexture();
-	Sprite g_Sprite;
+	Sprite* g_Sprite = Sprite::GetSprite();
+	SystemTimer g_SystemTimer{};
+	Scene* g_Scene = Scene::GetScene();
 
 
 	(void)CoInitializeEx(nullptr, COINIT_MULTITHREADED);
@@ -103,7 +112,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			g_Texture->Initialize(g_Direct3D.GetDevice(),
 				g_Direct3D.GetDeviceContext());
 
-			g_Sprite.Initialize(g_Direct3D.GetDevice(),
+			g_Sprite->Initialize(g_Direct3D.GetDevice(),
 				g_Direct3D.GetDeviceContext(),
 				g_Shader,g_Texture);
 
@@ -113,12 +122,28 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 
+	/* もろもろ初期化処理 */
+	g_Scene->Initialize();
+	g_SystemTimer.Initialize();
+	KeyLoggerInitialize();
+	Mouse_Initialize(hWnd);
+
 	///* 時間計測 */
-	//double execLastTime = 0.0;
-	//double fpsLastTime = 0.0;
-	//double currentTime = 0.0;
-	//ULONG frameCount = 0;
-	//double fps = 0.0;
+	double execLastTime = 0.0;
+	double fpsLastTime = 0.0;
+	double currentTime = 0.0;
+	ULONG frameCount = 0;
+	double fps = 0.0;
+
+	execLastTime = fpsLastTime = g_SystemTimer.GetTime();
+
+	hal::DebugText dt(g_Direct3D.GetDevice(),
+		g_Direct3D.GetDeviceContext(),
+		L"consolab_ascii_512.png",
+		g_Direct3D.GetBackBufferWidth(), g_Direct3D.GetBackBufferHeight(),
+		0.0f, 0.0f,
+		0, 0,
+		0.0f, 0.0f);
 
 	/* メッセージループ */
 	MSG msg;
@@ -138,18 +163,50 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		}
 		else
 		{
-			g_Direct3D.Clear();
+			currentTime = g_SystemTimer.GetTime();
+			double elapsedTime = currentTime - fpsLastTime;
 
-			g_Sprite.Draw(a, 0, 0, 100, 100);
+			if (elapsedTime >= 1.0)
+			{
+				fps = frameCount / elapsedTime;	//一秒間どれくらいなのかがでる
+				fpsLastTime = currentTime;	//FPSを測定した時刻をほぞｎ
+				frameCount = 0;	//カウントのクリア
+			}
 
-			g_Direct3D.Present();
+			//60フレーム付近固定にする処理
+			elapsedTime = currentTime - execLastTime;
+			if ((execLastTime) >= (1.0 / 60.0))
+
+			{
+				execLastTime = currentTime;
+				g_Direct3D.Clear();
+
+				/* Updata */
+				g_Scene->Updata(elapsedTime);
+
+				/* Draw */
+				g_Sprite->Draw(a, 0, 0, 100, 100);
+				g_Scene->Draw();
+
+#if defined(DEBUG)|| defined(_DEBUG)
+				std::stringstream ss;
+				ss << "fps" << fps << std::endl;
+				dt.SetText(ss.str().c_str());
+
+				dt.Draw();
+				dt.Clear();
+#endif
+
+				g_Direct3D.Present();
+				frameCount++;
+			}
 		}
 
 	} while (msg.message != WM_QUIT);
 
 	/* 各種終了処理 */
 	g_Direct3D.Finalize();
-	g_Sprite.Finalize();
+	g_Sprite->Finalize();
 	g_Texture->Finalize();
 	g_Shader->Finalize();
 	CoUninitialize();
