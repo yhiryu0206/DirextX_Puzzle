@@ -14,7 +14,7 @@ class Carrier
 public:
 	void Initialize();
 	void Finalize();
-	void Updata(double elapsedTime);
+	void Update(double elapsedTime);
 	void Draw();
 
 	/* リセット先座標を変える */
@@ -26,7 +26,6 @@ public:
 	void Fall();
 
 	const int* GetBlock();
-
 
 	int m_BlockList[3]{ -1,-1,-1 };
 
@@ -41,7 +40,9 @@ public:
 	double m_MoveStartTime = 0.0;
 	double m_FallWaitStartTime = 0.0;
 	double m_DestroyWaitStartTime = 0.0;
-	double MOVE_TIME = 1.012 * 2;
+	double MOVE_TIME = 0.012 * 2;
+
+	int m_LandingSoundId;
 
 	static Carrier* GetCarrier();
 

@@ -24,15 +24,11 @@ bool Direct3D::Initialize(HWND hWnd)
 	DXGI_SWAP_CHAIN_DESC swap_chain_desc{};
 	swap_chain_desc.Windowed = TRUE;	//
 	swap_chain_desc.BufferCount = 2;	//バッファの数
-	//swap_chain_desc.BufferDesc.Width = 0;
-	//swap_chain_desc.BufferDesc.Height = 0;
-	//→ウィンドウサイズに合わせて自動的に設定される
 	swap_chain_desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	swap_chain_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swap_chain_desc.SampleDesc.Count = 1;
 	swap_chain_desc.SampleDesc.Quality = 0;
 	swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
-	//swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_SEQUENTIAL;		//ベンチマーク用のやつ
 	swap_chain_desc.OutputWindow = hWnd;
 
 	UINT device_flags = 0;

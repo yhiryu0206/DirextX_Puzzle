@@ -7,11 +7,12 @@
 #include "block.h"
 #include "texture.h"
 #include "sprite.h"
+#include "Audio.h"
 
 static Stage g_Stage;
 
 static constexpr int BLOCK_H_COUNT = 8;
-static constexpr int BLOCK_V_COUNT = 10;
+static constexpr int BLOCK_V_COUNT = 12;
 
 static int g_StageBlock[BLOCK_V_COUNT][BLOCK_H_COUNT];
 static int g_DestroyMap[BLOCK_V_COUNT][BLOCK_H_COUNT];
@@ -31,6 +32,8 @@ void Stage::Initialize(float x, float y)
 			g_StageBlock[i][j] = -1;
 		}
 	}
+	m_DeleteSoundId = LoadAudio("resource/Sound/â¬à§Ç≠ãPÇ≠1.wav");
+
 }
 
 void Stage::Finalize()
@@ -80,7 +83,6 @@ void Stage::SetBlock(int kindIndex, int x, int y)
 	Block.Draw(kindIndex, m_OffsetX + Block.GetWidth() * x,
 		m_OffsetY + Block.GetHeight() * y);
 }
-
 int Stage::PitisionToStageX(float x)
 {
 	GameBlock Block{};
@@ -127,6 +129,7 @@ void Stage::DestroyBlocks()
 				//ì_êîåvéZÇÕÇ±Ç±Ç≈
 				g_StageBlock[i][j] = -1;
 				destroyCount++;
+				PlayAudio(m_DeleteSoundId);
 			}
 		}
 	}

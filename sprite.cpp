@@ -70,10 +70,6 @@ void Sprite::BeginDraw()
 	m_pContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 }
 
-void Sprite::Draw(int texId, float x, float y, DirectX::XMFLOAT4 color)
-{
-}
-
 void Sprite::Draw(int texId, float x, float y, float width, float height, DirectX::XMFLOAT4 color)
 {
 	/* ï`âÊèÄîı */

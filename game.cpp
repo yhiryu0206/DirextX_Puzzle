@@ -8,7 +8,7 @@
 #include "block.h"
 #include "stage.h"
 #include "carrier.h"
-
+#include "Audio.h"
 #include "keylogger.h"
 
 static GameBackGround g_BackGround;
@@ -19,6 +19,9 @@ static Carrier* g_Carrier = Carrier::GetCarrier();
 
 void Game::Initialize()
 {
+	m_GameSoundId = LoadAudio("resource/Sound/“ü‚è]‚ð–]‚ÞÂ‚«¹ˆæ.wav");
+	
+	PlayAudio(m_GameSoundId);
 	g_BackGround.Initialize();
 	g_Block->Initialize();
 	g_Stage->Initialize(522, 72);
@@ -35,38 +38,37 @@ void Game::Finalize()
 	g_Block->Finalize();
 }
 
-void Game::Updata(double elapsedTime)
+void Game::Update(double elapsedTime)
 {
-	if (KeyLoggerIsTrigger(KK_UP))
+	if (IsKeyDown(VK_UP))
 	{
 		g_Carrier->SwapUp();
 	}
-	if (KeyLoggerIsTrigger(KK_DOWN))
+	if (IsKeyDown(KK_DOWN))
 	{
 		g_Carrier->SwapDown();
 	}
 
-	if (KeyLoggerIsTrigger(KK_RIGHT))
+	if (IsKeyDown(KK_RIGHT))
 	{
 		g_Carrier->MoveRight();
 	}
-	if (KeyLoggerIsTrigger(KK_LEFT))
+	if (IsKeyDown(KK_LEFT))
 	{
 		g_Carrier->MoveLeft();
 	}
 
-	if (KeyLoggerIsTrigger(KK_S))
+	if (IsKeyDown(KK_S))
 	{
 		g_Carrier->Fall();
 	}
 
-	g_Carrier->Updata(elapsedTime);
+	g_Carrier->Update(elapsedTime);
 }
 
 void Game::Draw()
 {
 	g_BackGround.Draw();
-	g_Block->Draw(1,100,100);
 	g_Stage->Draw();
 	g_Carrier->Draw();
 }

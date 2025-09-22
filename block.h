@@ -12,7 +12,7 @@ class GameBlock
 public:
 	void Initialize();
 	void Finalize();
-	void Updata();
+	void Update();
 	void Draw(int kindIndex,float x,float y);
 
 	float GetWidth();

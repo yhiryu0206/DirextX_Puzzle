@@ -15,6 +15,8 @@ public:
 	float m_OffsetY = 0.0f;
 
 	int STAGE_WALL = 99;
+	int m_DeleteSoundId;
+
 	
 	void Initialize(float x,float y);
 	void Finalize();

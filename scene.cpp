@@ -4,23 +4,21 @@
 * 制作者：山室飛龍		日付：2025/9/21
 ------------------------------*/
 #include "scene.h"
-
-#include "game.h"
-
-Game* g_pGame;
+#include "Audio.h"
 
 void Scene::Initialize()
 {
+	InitAudio();
 	switch (m_Scene)
 	{
 	case Scene::SCENE_TITLE:
-
+		m_Title.Initialize();
 		break;
 	case Scene::SCENE_GAME:
-		g_pGame->Initialize();
+		m_Game.Initialize();
 		break;
 	case Scene::SCENE_RESELT:
-
+		m_Reselt.Initialize();
 		break;
 	default:
 		break;
@@ -32,31 +30,34 @@ void Scene::Finalize()
 	switch (m_Scene)
 	{
 	case Scene::SCENE_TITLE:
+		m_Title.Finalize();
 		break;
 	case Scene::SCENE_GAME:
-		g_pGame->Finalize();
+		m_Game.Finalize();
 		break;
 	case Scene::SCENE_RESELT:
+		m_Reselt.Finalize();
 		break;
-	case Scene::SCENE_MAX:
-		break;
+
 	default:
 		break;
 	}
+	UninitAudio();
+
 }
 
-void Scene::Updata(double elapsedTime)
+void Scene::Update(double elapsedTime)
 {
 	switch (m_Scene)
 	{
 	case Scene::SCENE_TITLE:
+		m_Title.Update(elapsedTime);
 		break;
 	case Scene::SCENE_GAME:
-		g_pGame->Updata(elapsedTime);
+		m_Game.Update(elapsedTime);
 		break;
 	case Scene::SCENE_RESELT:
-		break;
-	case Scene::SCENE_MAX:
+		m_Reselt.Update(elapsedTime);
 		break;
 	default:
 		break;
@@ -68,13 +69,13 @@ void Scene::Draw()
 	switch (m_Scene)
 	{
 	case Scene::SCENE_TITLE:
+		m_Title.Draw();
 		break;
 	case Scene::SCENE_GAME:
-		g_pGame->Draw();
+		m_Game.Draw();
 		break;
 	case Scene::SCENE_RESELT:
-		break;
-	case Scene::SCENE_MAX:
+		m_Reselt.Draw();
 		break;
 	default:
 		break;

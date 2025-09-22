@@ -18,16 +18,15 @@ void GameBlock::Finalize()
 {
 }
 
-void GameBlock::Updata()
+void GameBlock::Update()
 {
 }
 
 void GameBlock::Draw(int kindIndex, float x, float y)
 {
-	GameBlock Block{};
 	Sprite* g_Sprite = Sprite::GetSprite();
-	g_Sprite->Draw(m_BlockTexId,x,y,Block.GetWidth(),
-		Block.GetHeight(),kindIndex * 24, kindIndex * 24,
+	g_Sprite->Draw(m_BlockTexId,x,y,GetWidth(),
+		GetHeight(), static_cast<float>(kindIndex * 24), static_cast<float>(kindIndex * 24),
 		24, 24);
 }
 

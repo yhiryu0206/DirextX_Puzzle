@@ -6,10 +6,12 @@
 #include "carrier.h"
 #include "block.h"
 #include "stage.h"
+#include "Audio.h"
+
+#include "scene.h"
 
 static std::random_device rd;
 static std::mt19937 mt(rd());
-
 
 void Carrier::Initialize()
 {
@@ -29,6 +31,8 @@ void Carrier::Initialize()
 	m_FallWaitStartTime = 0.0f;
 	m_DestroyWaitStartTime = 0.0f;
 
+	m_LandingSoundId = LoadAudio("resource/Sound/パッ.wav");
+
 }
 
 void Carrier::Finalize()
@@ -36,13 +40,15 @@ void Carrier::Finalize()
 
 }
 
-void Carrier::Updata(double elapsedTime)
+void Carrier::Update(double elapsedTime)
 {
 	Stage* Stage = Stage::GetStage();
 	GameBlock* Block = GameBlock::GetBlock();
+	Scene* g_Scene = Scene::GetScene();
+
 	m_AccumulatedTime += elapsedTime;
 	double ratio = std::min((m_AccumulatedTime - m_MoveStartTime) / MOVE_TIME, 1.0);
-	float ease = ratio * MOVE_TIME;
+	float ease = static_cast<float>(ratio) * static_cast<float>(MOVE_TIME);
 
 	switch (m_CarrierState)
 	{
@@ -99,6 +105,7 @@ void Carrier::Updata(double elapsedTime)
 		m_CarrierX = m_MoveStartX - ease;
 		if (ratio >= 1.0)
 		{
+			m_CarrierX = m_MoveStartX - MOVE_WIDTH; // 最終位置に補正
 			m_CarrierState = FALL_WAIT;
 		}
 		break;
@@ -108,6 +115,7 @@ void Carrier::Updata(double elapsedTime)
 		m_CarrierX = m_MoveStartX + ease;
 		if (ratio >= 1.0)
 		{
+			m_CarrierX = m_MoveStartX + MOVE_WIDTH; // 最終位置に補正
 			m_CarrierState = FALL_WAIT;
 		}
 		break;
@@ -120,7 +128,9 @@ void Carrier::Updata(double elapsedTime)
 		{
 			Stage->SetBlock(m_BlockList[i], mx, my + i);
 		}
+		PlayAudio(m_LandingSoundId);
 		m_CarrierState = DESTROY;
+
 		break;
 	}
 	case Carrier::DESTROY:
@@ -130,12 +140,8 @@ void Carrier::Updata(double elapsedTime)
 		m_CarrierState = ADJUST;
 		m_DestroyWaitStartTime = m_AccumulatedTime;
 		break;
-	case Carrier::DESTROY_WAIT:
-		if (m_AccumulatedTime - m_DestroyWaitStartTime >= 1.0)
-		{
-			m_CarrierState = ADJUST;
-		}
-		break;
+
+
 	case Carrier::ADJUST:
 		if (!Stage->Adjust())
 		{
@@ -149,6 +155,7 @@ void Carrier::Updata(double elapsedTime)
 				m_CarrierState = FALL_WAIT;
 			}
 		}
+
 		break;
 	case Carrier::ADJUST_WAIT:
 		if (m_AccumulatedTime - m_DestroyWaitStartTime >= 1.0)
@@ -157,6 +164,10 @@ void Carrier::Updata(double elapsedTime)
 		}
 		break;
 	case Carrier::GAMEOVER:
+
+		g_Scene->SetNextScene(g_Scene->SCENE_RESELT);
+		g_Scene->ChangeScene();
+
 		break;
 
 	default:

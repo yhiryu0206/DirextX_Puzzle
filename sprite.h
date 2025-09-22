@@ -38,7 +38,6 @@ public:
 
 	void BeginDraw();
 
-	void Draw(int texId, float x, float y, DirectX::XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f, });
 	void Draw(int texId, float x, float y,
 		float width, float height,
 		DirectX::XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f});

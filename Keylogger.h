@@ -9,12 +9,12 @@
 #define KEYLOGGER_H
 
 void KeyLoggerInitialize();
-void KeyLoggerUpdata();
+void KeyLoggerUpdate();
 
 bool KeyLoggerIsPressed(Keyboard_Keys key);
 bool KeyLoggerIsTrigger(Keyboard_Keys key);
 bool KeyLoggerIsRelease(Keyboard_Keys key);
 
-
+bool IsKeyDown(int vKey);
 
 #endif // KEYLOGGER_H

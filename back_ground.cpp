@@ -11,22 +11,22 @@ void GameBackGround::Initialize()
 {
 	Texture* g_Texture = Texture::GetTexture();
 	m_BackGroundTexId = g_Texture->Load(L"resource/NightSky/BackGroundTexId.png");
+	m_BackGroundGridTexId = g_Texture->Load(L"resource//grid_12x8.png");
+
 }
 
 void GameBackGround::Finalize()
 {
 }
 
-void GameBackGround::Updata()
+void GameBackGround::Update()
 {
 }
 
 void GameBackGround::Draw()
 {
 	Sprite* g_Sprite = Sprite::GetSprite();
-	Texture* g_Texture = Texture::GetTexture();
-	/*g_Sprite->Draw(m_BackGroundTexId, 0, 0,
-		g_Texture->GetWidth(m_BackGroundTexId),
-		g_Texture->GetHeight(m_BackGroundTexId));*/
+
 	g_Sprite->Draw(m_BackGroundTexId, 0, 0,1600,900);
+	g_Sprite->Draw(m_BackGroundGridTexId, 522, 72, 512, 768);
 }

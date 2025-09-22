@@ -16,8 +16,8 @@
 #include "mouse.h"
 #include "debug_text.h"
 #include <sstream>
-
 #include "scene.h"
+#include "Audio.h"
 
 /*------------------------------
 *	ウィンドウ情報
@@ -123,10 +123,12 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	UpdateWindow(hWnd);
 
 	/* もろもろ初期化処理 */
-	g_Scene->Initialize();
-	g_SystemTimer.Initialize();
 	KeyLoggerInitialize();
 	Mouse_Initialize(hWnd);
+	InitAudio();
+	g_Scene->Initialize();
+	g_SystemTimer.Initialize();
+
 
 	///* 時間計測 */
 	double execLastTime = 0.0;
@@ -147,9 +149,6 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 	/* メッセージループ */
 	MSG msg;
-
-
-	int a = g_Texture->Load(L"名称未設定1.png");
 
 	//マウスの位置や画面サイズなどのメッセージが飛んでくるのを待っている
 	//Getmessageは同期処理,PeekMessageを非同期処理という
@@ -181,11 +180,11 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 				execLastTime = currentTime;
 				g_Direct3D.Clear();
 
-				/* Updata */
-				g_Scene->Updata(elapsedTime);
+				/* Update */
+				KeyLoggerUpdate();
+				g_Scene->Update(elapsedTime);
 
 				/* Draw */
-				g_Sprite->Draw(a, 0, 0, 100, 100);
 				g_Scene->Draw();
 
 #if defined(DEBUG)|| defined(_DEBUG)
@@ -205,11 +204,15 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	} while (msg.message != WM_QUIT);
 
 	/* 各種終了処理 */
+	UninitAudio();
 	g_Direct3D.Finalize();
 	g_Sprite->Finalize();
 	g_Texture->Finalize();
 	g_Shader->Finalize();
+	g_Scene->Finalize();
 	CoUninitialize();
+
+	UninitAudio();
 
 	return (int)msg.wParam;
 

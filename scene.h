@@ -6,12 +6,16 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include "title.h"
+#include "game.h"
+#include "reselt.h"
+
 class Scene
 {
 public:
 	void Initialize();
 	void Finalize();
-	void Updata(double elapsedTime);
+	void Update(double elapsedTime);
 	void Draw();
 
 	enum SceneChange
@@ -27,8 +31,11 @@ public:
 	static Scene* GetScene();
 
 private:
+	Title m_Title;
+	Game m_Game;
+	Reselt m_Reselt;
 
-	SceneChange m_Scene = SCENE_GAME;
+	SceneChange m_Scene = SCENE_TITLE;
 	SceneChange m_SceneNext = m_Scene;
 
 };
